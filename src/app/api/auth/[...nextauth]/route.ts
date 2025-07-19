@@ -57,11 +57,7 @@ export const authOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async signIn({ user, account, profile }: { 
-      user: any; 
-      account: any; 
-      profile?: any; 
-    }) {
+    async signIn({ user, account, profile }: { user: Record<string, unknown>; account: Record<string, unknown>; profile?: Record<string, unknown>; }) {
       if (account?.provider === "google") {
         const client = await clientPromise;
         const db = client.db();
@@ -117,11 +113,7 @@ export const authOptions = {
       }
       return true;
     },
-    async jwt({ token, user, account }: { 
-      token: any; 
-      user: any; 
-      account: any; 
-    }) {
+    async jwt({ token, user }: { token: Record<string, unknown>; user: Record<string, unknown>; }) {
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -130,10 +122,7 @@ export const authOptions = {
       }
       return token;
     },
-    async session({ session, token }: { 
-      session: any; 
-      token: any; 
-    }) {
+    async session({ session, token }: { session: Record<string, unknown>; token: Record<string, unknown>; }) {
       if (token?.id) {
         session.user.id = token.id;
       }

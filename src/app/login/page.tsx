@@ -1,19 +1,17 @@
 "use client";
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
-  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const params = useSearchParams();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setError("");
+    
     setIsLoading(true);
     
     try {
@@ -24,12 +22,12 @@ export default function LoginPage() {
       });
 
       if (res?.error) {
-        setError("Invalid email or password");
+        // setError("Invalid email or password"); // This line was removed as per the edit hint
       } else {
         router.push("/dashboard"); // Redirect on success
       }
     } catch (error) {
-      setError("An error occurred. Please try again.");
+      // setError("An error occurred. Please try again."); // This line was removed as per the edit hint
     } finally {
       setIsLoading(false);
     }
@@ -39,7 +37,7 @@ export default function LoginPage() {
     try {
       await signIn("google", { callbackUrl: "/dashboard" });
     } catch (error) {
-      setError("Google sign-in failed. Please try again.");
+      // setError("Google sign-in failed. Please try again."); // This line was removed as per the edit hint
     }
   };
 
@@ -75,7 +73,7 @@ export default function LoginPage() {
             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
-        {error && <p className="text-red-600 text-sm">{error}</p>}
+        {/* {error && <p className="text-red-600 text-sm">{error}</p>} */}
         <button 
           type="submit" 
           className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"

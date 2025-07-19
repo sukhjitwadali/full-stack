@@ -19,7 +19,7 @@ export default function ResetRequestPage() {
       
       const data = await res.json();
       setMessage(data.message || "Request submitted.");
-    } catch (error) {
+    } catch {
       setMessage("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);

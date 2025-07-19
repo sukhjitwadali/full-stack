@@ -1,5 +1,4 @@
 "use client";
-import { useSession } from "next-auth/react";
 import UserProfile from "@/components/UserProfile";
 
 export default function Dashboard() {

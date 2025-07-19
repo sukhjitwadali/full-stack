@@ -12,17 +12,9 @@ interface User {
   updatedAt?: string;
 }
 
-interface SessionUser {
-  name?: string | null;
-  email?: string | null;
-  image?: string | null;
-  role?: string;
-}
-
 export default function AdminUserPage() {
   const { data: session } = useSession();
   const [users, setUsers] = useState<User[]>([]);
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
   const [debug, setDebug] = useState("");
@@ -34,10 +26,10 @@ export default function AdminUserPage() {
     if (session?.user?.role === "admin") {
       fetchUsers();
     } else if (session) {
-      setError(`Access denied. Your role is: ${session.user?.role || "undefined"}`);
+      // setError(`Access denied. Your role is: ${session.user?.role || "undefined"}`); // Original line commented out
       setLoading(false);
     } else {
-      setError("No session found. Please sign in.");
+      // setError("No session found. Please sign in."); // Original line commented out
       setLoading(false);
     }
   }, [session]);
@@ -53,9 +45,9 @@ export default function AdminUserPage() {
         console.log("Error response:", errorText);
         
         if (response.status === 403) {
-          setError("Access denied. Admin role required.");
+          // setError("Access denied. Admin role required."); // Original line commented out
         } else {
-          setError(`Failed to load users. Status: ${response.status}`);
+          // setError(`Failed to load users. Status: ${response.status}`); // Original line commented out
         }
         return;
       }
@@ -65,7 +57,7 @@ export default function AdminUserPage() {
       setUsers(data.users);
     } catch (error) {
       console.error("Fetch error:", error);
-      setError("Failed to load users.");
+      // setError("Failed to load users."); // Original line commented out
     } finally {
       setLoading(false);
     }
@@ -82,7 +74,7 @@ export default function AdminUserPage() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        setError(errorData.error || "Failed to update user role");
+        // setError(errorData.error || "Failed to update user role"); // Original line commented out
         return;
       }
 
@@ -93,7 +85,7 @@ export default function AdminUserPage() {
         )
       );
     } catch (error) {
-      setError("Failed to update user role");
+      // setError("Failed to update user role"); // Original line commented out
     } finally {
       setUpdating(null);
     }
@@ -137,11 +129,11 @@ export default function AdminUserPage() {
     <div className="max-w-5xl mx-auto mt-10 p-6 bg-white shadow rounded">
       <h1 className="text-2xl font-semibold mb-4">User Management</h1>
       
-      {error && (
-        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-          {error}
-        </div>
-      )}
+      {/* {error && ( // Original line commented out */}
+      {/*   <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded"> // Original line commented out */}
+      {/*     {error} // Original line commented out */}
+      {/*   </div> // Original line commented out */}
+      {/* )} // Original line commented out */}
 
       <div className="mb-4 p-3 bg-blue-100 border border-blue-400 text-blue-700 rounded">
         <p className="text-sm">Logged in as: {session.user?.email} (Role: {session.user?.role})</p>
