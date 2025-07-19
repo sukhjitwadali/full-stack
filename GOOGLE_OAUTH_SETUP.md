@@ -17,7 +17,7 @@ Create a `.env.local` file in your project root with the following variables:
 
 ```env
 # NextAuth Configuration
-NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_URL=https://full-stack-9rzy.vercel.app/
 NEXTAUTH_SECRET=your-random-secret-key-here
 
 # Google OAuth Credentials

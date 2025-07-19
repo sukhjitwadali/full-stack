@@ -46,7 +46,7 @@ export async function POST(req: Request) {
       console.error('Email sending failed:', emailResult.error);
       // Still log the token for development
       console.log(`Reset token for ${email}: ${token}`);
-      console.log(`Reset URL: http://localhost:3000/reset/${token}`);
+      console.log(`Reset URL: https://full-stack-9rzy.vercel.app//reset/${token}`);
     }
 
     return NextResponse.json({ 
