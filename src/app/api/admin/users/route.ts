@@ -4,7 +4,7 @@ import clientPromise from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 
-export async function GET(_: Request) {
+export async function GET() {
   try {
     console.log("Admin users API called");
     
@@ -59,7 +59,7 @@ export async function GET(_: Request) {
   }
 }
 
-export async function PATCH(_: Request) {
+export async function PATCH() {
   try {
     const session = await getServerSession(authOptions);
     

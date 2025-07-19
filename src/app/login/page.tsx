@@ -26,7 +26,7 @@ export default function LoginPage() {
       } else {
         router.push("/dashboard"); // Redirect on success
       }
-    } catch (error) {
+    } catch {
       // setError("An error occurred. Please try again."); // This line was removed as per the edit hint
     } finally {
       setIsLoading(false);
@@ -36,7 +36,7 @@ export default function LoginPage() {
   const handleGoogleSignIn = async () => {
     try {
       await signIn("google", { callbackUrl: "/dashboard" });
-    } catch (error) {
+    } catch {
       // setError("Google sign-in failed. Please try again."); // This line was removed as per the edit hint
     }
   };

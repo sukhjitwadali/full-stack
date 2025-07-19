@@ -73,8 +73,7 @@ export default function AdminUserPage() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        // setError(errorData.error || "Failed to update user role"); // Original line commented out
+        await response.json(); // Remove errorData
         return;
       }
 
@@ -84,8 +83,8 @@ export default function AdminUserPage() {
           user._id === userId ? { ...user, role: newRole } : user
         )
       );
-    } catch (error) {
-      // setError("Failed to update user role"); // Original line commented out
+    } catch {
+      // No error variable needed
     } finally {
       setUpdating(null);
     }
