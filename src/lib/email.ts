@@ -17,7 +17,7 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
       },
     });
 
-    const resetUrl = `https://full-stack-9rzy.vercel.app/reset/${token}`;
+    const resetUrl = `https://fullstack-developers-site.vercel.app/reset/${token}`;
     const mailOptions = {
       from: 'sukhwadali3@gmail.com',
       to: email,
