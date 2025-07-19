@@ -136,10 +136,9 @@ export const authOptions = {
         session.user.role = token.role;
       }
       return session;
-    },
-  },
+    }
+  }
 };
 
-// ✅ Required export for App Router
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
