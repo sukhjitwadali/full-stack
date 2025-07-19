@@ -8,12 +8,12 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
     console.log('SMTP_USER:', process.env.SMTP_USER);
     // Do not log SMTP_PASS for security
     const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_SERVER || "smtp.mailgun.org",
+      host: process.env.SMTP_SERVER,
       port: 587,
       secure: false, // Mailgun uses TLS on port 587
       auth: {
-        user: process.env.SMTP_USER || "postmaster@your-domain.mailgun.org",
-        pass: process.env.SMTP_PASS || "your-mailgun-smtp-password",
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
       },
     });
 

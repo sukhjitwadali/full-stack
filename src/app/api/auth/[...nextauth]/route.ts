@@ -40,8 +40,8 @@ export const authOptions = {
       },
     }),
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "your-google-client-id",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "your-google-client-secret",
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
   session: {
@@ -55,7 +55,7 @@ export const authOptions = {
   pages: {
     signIn: "/login",
   },
-  secret: process.env.NEXTAUTH_SECRET || "your-nextauth-secret-key",
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async signIn({ user, account, profile }: { user: Record<string, unknown>; account: Record<string, unknown>; profile?: Record<string, unknown>; }) {
       if (account?.provider === "google") {
