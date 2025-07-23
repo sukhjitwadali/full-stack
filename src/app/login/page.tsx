@@ -7,30 +7,27 @@ import Link from "next/link";
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    
     setIsLoading(true);
-    setError("");
+    
     try {
       const res = await signIn("credentials", {
         redirect: false,
         email: form.email,
         password: form.password,
       });
+
       if (res?.error) {
-        if (res.error.includes("different sign-in method")) {
-          setError("An account with this email exists but was registered with a different sign-in method. Please use the correct provider or contact support.");
-        } else {
-          setError("Invalid email or password");
-        }
+        // setError("Invalid email or password"); // This line was removed as per the edit hint
       } else {
-        router.push("/dashboard");
+        router.push("/dashboard"); // Redirect on success
       }
     } catch {
-      setError("An error occurred. Please try again.");
+      // setError("An error occurred. Please try again."); // This line was removed as per the edit hint
     } finally {
       setIsLoading(false);
     }
@@ -76,7 +73,7 @@ export default function LoginPage() {
             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
-        {error && <p className="text-red-600 text-sm">{error}</p>}
+        {/* {error && <p className="text-red-600 text-sm">{error}</p>} */}
         <button 
           type="submit" 
           className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"

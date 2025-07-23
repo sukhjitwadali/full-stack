@@ -91,8 +91,9 @@ export const authOptions = {
             console.log(`Existing OAuth user signed in: ${user.email}`);
           } else {
             // Different OAuth provider - this could be handled differently
-            // Throw a specific error for conflict
-            throw new Error("Account exists with a different sign-in method. Please use the correct provider or contact support.");
+            console.log(`User ${user.email} has different OAuth provider`);
+            user.id = existingUser._id.toString();
+            user.role = existingUser.role || "user";
           }
         } else {
           // Create new user for Google OAuth

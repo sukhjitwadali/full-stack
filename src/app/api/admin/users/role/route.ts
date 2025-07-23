@@ -17,7 +17,7 @@ export async function PATCH(req: Request) {
   if (!userId || !newRole) {
     return NextResponse.json({ error: "User ID and newRole are required" }, { status: 400 });
   }
-  if (!["admin", "user", "moderator"].includes(newRole)) {
+  if (!["admin", "user"].includes(newRole)) {
     return NextResponse.json({ error: "Invalid role" }, { status: 400 });
   }
 
