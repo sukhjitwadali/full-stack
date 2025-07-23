@@ -1,101 +1,44 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-interface StockDataPoint {
-  date: string;
-  price: number;
-  open: number;
-  high: number;
-  low: number;
-  volume: number;
-}
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const symbol = searchParams.get('symbol');
+  const apiKey = process.env.POLYGON_API_KEY;
 
-const ALPHA_VANTAGE_API_KEY = 'X0UBKJB45VWX34PP';
-const ALPHA_VANTAGE_BASE_URL = 'https://www.alphavantage.co/query';
+  if (!symbol) {
+    return NextResponse.json({ error: 'Missing symbol parameter' }, { status: 400 });
+  }
+  if (!apiKey) {
+    return NextResponse.json({ error: 'Polygon.io API key not set' }, { status: 500 });
+  }
 
-export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url);
-    const symbol = searchParams.get('symbol');
-    const function_type = searchParams.get('function') || 'TIME_SERIES_DAILY';
-
-    if (!symbol) {
-      return NextResponse.json({ error: 'Stock symbol is required' }, { status: 400 });
+    // Fetch last 50 daily closes
+    const today = new Date();
+    const to = today.toISOString().slice(0, 10);
+    const fromDate = new Date(today);
+    fromDate.setDate(today.getDate() - 70); // buffer for weekends/holidays
+    const from = fromDate.toISOString().slice(0, 10);
+    const url = `https://api.polygon.io/v2/aggs/ticker/${symbol.toUpperCase()}/range/1/day/${from}/${to}?adjusted=true&sort=desc&limit=50&apiKey=${apiKey}`;
+    const resp = await fetch(url);
+    if (!resp.ok) {
+      const err = await resp.json();
+      return NextResponse.json({ error: err.error || 'Polygon.io error' }, { status: 500 });
     }
-
-    // Fetch stock data from Alpha Vantage
-    const response = await fetch(
-      `${ALPHA_VANTAGE_BASE_URL}?function=${function_type}&symbol=${symbol}&apikey=${ALPHA_VANTAGE_API_KEY}`
-    );
-
-    if (!response.ok) {
-      throw new Error(`Alpha Vantage API error: ${response.status}`);
+    const data = await resp.json();
+    if (!data.results || !Array.isArray(data.results) || data.results.length === 0) {
+      return NextResponse.json({ error: 'No data found for symbol' }, { status: 404 });
     }
-
-    const data = await response.json();
-
-    // Check for API errors
-    if (data['Error Message']) {
-      return NextResponse.json({ error: data['Error Message'] }, { status: 400 });
-    }
-
-    if (data['Note']) {
-      return NextResponse.json({ error: 'API rate limit exceeded. Please try again later.' }, { status: 429 });
-    }
-
-    // Process the data based on function type
-    let processedData: StockDataPoint[] = [];
-    
-    if (function_type === 'TIME_SERIES_DAILY') {
-      const timeSeries = data['Time Series (Daily)'];
-      if (timeSeries) {
-        processedData = Object.entries(timeSeries)
-          .map(([date, values]: [string, any]) => ({
-            date,
-            price: parseFloat(values['4. close']),
-            open: parseFloat(values['1. open']),
-            high: parseFloat(values['2. high']),
-            low: parseFloat(values['3. low']),
-            volume: parseInt(values['5. volume'])
-          }))
-          .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-          .slice(-100); // Get last 100 days
-      }
-    } else if (function_type === 'TIME_SERIES_WEEKLY') {
-      const timeSeries = data['Weekly Time Series'];
-      if (timeSeries) {
-        processedData = Object.entries(timeSeries)
-          .map(([date, values]: [string, any]) => ({
-            date,
-            price: parseFloat(values['4. close']),
-            open: parseFloat(values['1. open']),
-            high: parseFloat(values['2. high']),
-            low: parseFloat(values['3. low']),
-            volume: parseInt(values['5. volume'])
-          }))
-          .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-          .slice(-52); // Get last 52 weeks
-      }
-    }
-
-    if (processedData.length === 0) {
-      return NextResponse.json({ error: 'No data found for the specified symbol' }, { status: 404 });
-    }
-
-    return NextResponse.json({
-      symbol: symbol.toUpperCase(),
-      data: processedData,
-      count: processedData.length,
-      dateRange: {
-        start: processedData[0].date,
-        end: processedData[processedData.length - 1].date
-      }
-    });
-
-  } catch (error) {
-    console.error('Stock data API error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch stock data' },
-      { status: 500 }
-    );
+    // Map to { date, close }
+    const results = data.results
+      .slice(0, 50)
+      .reverse()
+      .map((item: any) => ({
+        date: new Date(item.t).toISOString().slice(0, 10),
+        close: item.c,
+      }));
+    return NextResponse.json({ symbol: symbol.toUpperCase(), data: results });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message || 'Unknown error' }, { status: 500 });
   }
 } 
