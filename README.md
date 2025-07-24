@@ -59,7 +59,7 @@ This application predicts future stock prices using a simple neural network (Bra
 ## Model Logic
 
 - **Neural Network:**
-  - Uses Brain.js (`NeuralNetwork`) with a simple feedforward architecture.
+  - Uses Brain.js via CDN (`window.brain.NeuralNetwork`) with a simple feedforward architecture.
   - Trains on historical closing prices: each input is `[close]`, output is `[nextClose]`.
   - After training, predicts the next closing price based on the latest value.
 - **Prediction Display:**
@@ -72,12 +72,31 @@ This application predicts future stock prices using a simple neural network (Bra
 - [Next.js](https://nextjs.org/) (React framework)
 - [React](https://react.dev/)
 - [Tailwind CSS](https://tailwindcss.com/) (styling)
-- [brain.js](https://github.com/BrainJS/brain.js) (neural network)
+- [brain.js](https://github.com/BrainJS/brain.js) (via CDN, neural network)
 - [chart.js](https://www.chartjs.org/) & [react-chartjs-2](https://github.com/reactchartjs/react-chartjs-2) (visualization)
 - [axios](https://axios-http.com/) (API calls)
 - [next-auth](https://next-auth.js.org/) (authentication)
 
 ---
+
+## Brain.js CDN Usage
+
+- The app does **not** use the npm `brain.js` package.
+- Instead, the browser build is loaded via CDN in `src/app/layout.tsx`:
+  ```tsx
+  <Script
+    src="https://cdn.jsdelivr.net/npm/brain.js@2.0.0-beta.23/dist/brain-browser.min.js"
+    strategy="beforeInteractive"
+  />
+  ```
+- In client components, use `window.brain.NeuralNetwork` for all neural network logic.
+- This approach avoids native build issues and works on all platforms, including Vercel.
+
+---
+
+## Deployed Version
+
+- https://full-stack-developer-ashen.vercel.app
 
 ---
 
