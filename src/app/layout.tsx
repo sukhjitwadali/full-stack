@@ -1,10 +1,17 @@
 import './globals.css';
 import NavBar from '@/components/NavBar';
-import SessionWrapper from '@/components/SessionWrapper'; // ✅ new wrapper
+import SessionWrapper from '@/components/SessionWrapper';
+import Script from 'next/script';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <Script
+          src="https://cdn.jsdelivr.net/npm/brain.js@2.0.0-beta.23/dist/brain-browser.min.js"
+          strategy="beforeInteractive"
+        />
+      </head>
       <body className="min-h-screen bg-gray-100 text-gray-900 flex flex-col">
         <SessionWrapper>
           <NavBar />
