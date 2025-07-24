@@ -1,3 +1,5 @@
+import UserProfile from "@/components/UserProfile";
+
 export default function Home() {
   return (
     <main className="max-w-4xl mx-auto">
@@ -14,6 +16,7 @@ export default function Home() {
           </ul>
         </div>
       </div>
+      <UserProfile />
     </main>
   );
 }
